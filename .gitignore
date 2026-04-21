@@ -2,3 +2,4 @@ data/raw/
 data/chroma/
 .venv/
 .venv/
+.env
