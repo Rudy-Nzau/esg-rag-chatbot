@@ -1,4 +1,4 @@
-# 🌱 ESG RAG Chatbot
+# ESG RAG Chatbot
 
 A production-grade Retrieval-Augmented Generation (RAG) chatbot specialized in ESG (Environmental, Social, Governance) data analysis and reporting.
 
@@ -6,7 +6,7 @@ Built with LangChain, FastAPI, Docker, and ChromaDB — deployable on GCP.
 
 ---
 
-## 🎯 Purpose
+##  Purpose
 
 ESG analysts and compliance teams spend hours manually searching through regulatory documents, sustainability reports, and financial filings. This chatbot enables natural language querying over ESG corpora, returning grounded, cited answers with source traceability.
 
@@ -18,7 +18,7 @@ ESG analysts and compliance teams spend hours manually searching through regulat
 
 ---
 
-## 🏗️ Architecture
+##  Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -53,7 +53,7 @@ ESG analysts and compliance teams spend hours manually searching through regulat
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -71,7 +71,7 @@ ESG analysts and compliance teams spend hours manually searching through regulat
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 esg-rag-chatbot/
@@ -126,7 +126,7 @@ esg-rag-chatbot/
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 - Python 3.11+
@@ -171,7 +171,7 @@ curl -X POST http://localhost:8000/chat \
 
 ---
 
-## 🔬 RAG Pipeline Details
+##  RAG Pipeline Details
 
 ### Ingestion
 1. **Loading**: Supports PDF, CSV, JSON via LangChain document loaders
@@ -193,7 +193,7 @@ curl -X POST http://localhost:8000/chat \
 
 ---
 
-## 📊 Evaluation
+##  Evaluation
 
 This project uses [RAGAS](https://docs.ragas.io) for automated RAG evaluation:
 
@@ -209,7 +209,7 @@ Metrics tracked:
 
 ---
 
-## 🔭 Observability
+##  Observability
 
 - **LangSmith**: Full trace of every chain execution (latency, token usage, retrieval quality)
 - **Prometheus**: API metrics exposed at `/metrics` (request count, latency, error rate)
@@ -233,7 +233,7 @@ gcloud run deploy esg-rag-chatbot \
 
 ---
 
-## 🗺️ Roadmap
+##  Roadmap
 
 - [x] Basic RAG pipeline with ChromaDB
 - [x] FastAPI with /chat and /ingest endpoints
