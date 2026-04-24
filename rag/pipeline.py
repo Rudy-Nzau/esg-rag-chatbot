@@ -1,14 +1,19 @@
 """
 Core RAG pipeline — ESG chatbot
-Retrieval ChromaDB → génération Mistral
+Hybrid retrieval (BM25 + Semantic) → Mistral generation
 """
 
 from langchain_mistralai import ChatMistralAI, MistralAIEmbeddings
-from langchain_community.vectorstores import Chroma
+from langchain_chroma import Chroma
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.prompts import PromptTemplate
+from langchain_core.documents import Document
 from rag.prompts import ESG_RAG_PROMPT
+from rank_bm25 import BM25Okapi
 from dotenv import load_dotenv
 import os
+import glob
 import logging
 
 load_dotenv()
@@ -17,13 +22,13 @@ logger = logging.getLogger(__name__)
 
 class ESGRAGPipeline:
     def __init__(self):
-        embeddings = MistralAIEmbeddings(
+        self.embeddings = MistralAIEmbeddings(
             model="mistral-embed",
             mistral_api_key=os.getenv("MISTRAL_API_KEY")
         )
         self.vectorstore = Chroma(
             persist_directory=os.getenv("CHROMA_PERSIST_DIR", "./data/chroma"),
-            embedding_function=embeddings,
+            embedding_function=self.embeddings,
             collection_name=os.getenv("COLLECTION_NAME", "esg_documents"),
         )
         self.llm = ChatMistralAI(
@@ -35,14 +40,50 @@ class ESGRAGPipeline:
             input_variables=["context", "question"],
             template=ESG_RAG_PROMPT,
         )
-        print("✅ RAG Pipeline initialized")
+
+        # Charger les documents pour BM25
+        self.documents = self._load_documents()
+        if self.documents:
+            tokenized = [doc.page_content.lower().split() for doc in self.documents]
+            self.bm25 = BM25Okapi(tokenized)
+            print(f"✅ Hybrid RAG Pipeline initialized — {len(self.documents)} chunks")
+        else:
+            self.bm25 = None
+            print("✅ Semantic-only RAG Pipeline initialized")
+
+    def _load_documents(self):
+        docs = []
+        splitter = RecursiveCharacterTextSplitter(chunk_size=512, chunk_overlap=50)
+        for pdf in glob.glob("data/raw/*.pdf"):
+            pages = PyPDFLoader(pdf).load()
+            docs.extend(splitter.split_documents(pages))
+        return docs
+
+    def _hybrid_retrieve(self, question: str, k: int = 4):
+        # Semantic search
+        semantic_docs = self.vectorstore.similarity_search(question, k=k)
+        semantic_ids = {doc.page_content for doc in semantic_docs}
+
+        if self.bm25 is None:
+            return semantic_docs
+
+        # BM25 search
+        tokens = question.lower().split()
+        scores = self.bm25.get_scores(tokens)
+        top_bm25_idx = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)[:k]
+        bm25_docs = [self.documents[i] for i in top_bm25_idx]
+
+        # Fusion — dédupliqué
+        merged = list(semantic_docs)
+        for doc in bm25_docs:
+            if doc.page_content not in semantic_ids:
+                merged.append(doc)
+
+        return merged[:k]
 
     def query(self, question: str) -> dict:
-        # 1. Retrieval
-        docs = self.vectorstore.similarity_search(question, k=4)
-        logger.info(f"Retrieved {len(docs)} chunks")
+        docs = self._hybrid_retrieve(question)
 
-        # 2. Build context
         context_parts = []
         sources = []
         for i, doc in enumerate(docs):
@@ -52,12 +93,7 @@ class ESGRAGPipeline:
                 sources.append(source)
 
         context = "\n\n".join(context_parts)
-
-        # 3. Generate
-        formatted_prompt = self.prompt.format(
-            context=context,
-            question=question
-        )
+        formatted_prompt = self.prompt.format(context=context, question=question)
         response = self.llm.invoke(formatted_prompt)
 
         return {
