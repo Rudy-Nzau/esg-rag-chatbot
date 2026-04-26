@@ -238,19 +238,19 @@ gcloud run deploy esg-rag-chatbot \
 - [x] Basic RAG pipeline with ChromaDB
 - [x] FastAPI with /chat and /ingest endpoints
 - [x] Docker containerization
-- [ ] Hybrid search (BM25 + semantic)
-- [ ] CrossEncoder reranking
-- [ ] RAGAS evaluation framework
-- [ ] LangSmith observability
+- [x] Hybrid search (BM25 + semantic)
+- [x] CrossEncoder reranking
+- [x] RAGAS evaluation framework
+- [x] LangSmith observability
 - [ ] GCP Cloud Run deployment
 - [ ] LLM agents for multi-step ESG queries
 - [ ] Qdrant migration for production
 
 ---
 
-## 🧑‍💻 Author
+##  Author
 
-**Rudy Nzau** — Data Scientist & AI Engineer  
+**Rudy Nzau** — Data Scientist & AI Engineer  with Claude
 [LinkedIn](https://linkedin.com/in/rudy-nzau) · [GitHub](https://github.com/rudy-nzau)
 
 *Built as part of a transition toward AI/LLM Engineering roles, with a focus on regulated and ESG environments.*
