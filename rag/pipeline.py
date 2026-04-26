@@ -1,6 +1,6 @@
 """
 Core RAG pipeline — ESG chatbot
-Hybrid retrieval (BM25 + Semantic) → Mistral generation
+Hybrid retrieval (BM25 + Semantic) → CrossEncoder Reranking → Mistral generation
 """
 
 from langchain_mistralai import ChatMistralAI, MistralAIEmbeddings
@@ -8,8 +8,8 @@ from langchain_chroma import Chroma
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.prompts import PromptTemplate
-from langchain_core.documents import Document
 from rag.prompts import ESG_RAG_PROMPT
+from rag.reranker import CrossEncoderReranker
 from rank_bm25 import BM25Okapi
 from dotenv import load_dotenv
 import os
@@ -40,8 +40,9 @@ class ESGRAGPipeline:
             input_variables=["context", "question"],
             template=ESG_RAG_PROMPT,
         )
+        self.reranker = CrossEncoderReranker(top_k=4)
 
-        # Charger les documents pour BM25
+        # Documents pour BM25
         self.documents = self._load_documents()
         if self.documents:
             tokenized = [doc.page_content.lower().split() for doc in self.documents]
@@ -59,34 +60,37 @@ class ESGRAGPipeline:
             docs.extend(splitter.split_documents(pages))
         return docs
 
-    def _hybrid_retrieve(self, question: str, k: int = 4):
-        # Semantic search
+    def _hybrid_retrieve(self, question: str, k: int = 10):
+        """Retrieval large (k=10) avant reranking"""
         semantic_docs = self.vectorstore.similarity_search(question, k=k)
         semantic_ids = {doc.page_content for doc in semantic_docs}
 
         if self.bm25 is None:
             return semantic_docs
 
-        # BM25 search
         tokens = question.lower().split()
         scores = self.bm25.get_scores(tokens)
-        top_bm25_idx = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)[:k]
-        bm25_docs = [self.documents[i] for i in top_bm25_idx]
+        top_idx = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)[:k]
+        bm25_docs = [self.documents[i] for i in top_idx]
 
-        # Fusion — dédupliqué
         merged = list(semantic_docs)
         for doc in bm25_docs:
             if doc.page_content not in semantic_ids:
                 merged.append(doc)
 
-        return merged[:k]
+        return merged
 
     def query(self, question: str) -> dict:
-        docs = self._hybrid_retrieve(question)
+        # 1. Hybrid retrieval large (k=10)
+        candidates = self._hybrid_retrieve(question, k=10)
 
+        # 2. CrossEncoder reranking → top 4
+        reranked = self.reranker.rerank(question, candidates)
+
+        # 3. Build context
         context_parts = []
         sources = []
-        for i, doc in enumerate(docs):
+        for i, doc in enumerate(reranked):
             context_parts.append(f"[{i+1}] {doc.page_content}")
             source = doc.metadata.get("source", "unknown")
             if source not in sources:
@@ -99,6 +103,6 @@ class ESGRAGPipeline:
         return {
             "answer": response.content,
             "sources": sources,
-            "num_chunks_retrieved": len(docs),
-            "num_chunks_used": len(docs),
+            "num_chunks_retrieved": len(candidates),
+            "num_chunks_used": len(reranked),
         }
