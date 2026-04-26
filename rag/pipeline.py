@@ -82,7 +82,7 @@ class ESGRAGPipeline:
 
     def query(self, question: str) -> dict:
         # 1. Hybrid retrieval large (k=10)
-        candidates = self._hybrid_retrieve(question, k=10)
+        candidates = self._hybrid_retrieve(question, k=8)
 
         # 2. CrossEncoder reranking → top 4
         reranked = self.reranker.rerank(question, candidates)
