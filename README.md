@@ -242,7 +242,7 @@ gcloud run deploy esg-rag-chatbot \
 - [x] CrossEncoder reranking
 - [x] RAGAS evaluation framework
 - [x] LangSmith observability
-- [ ] GCP Cloud Run deployment
+- [x] GCP Cloud Run deployment
 - [ ] LLM agents for multi-step ESG queries
 - [ ] Qdrant migration for production
 
