@@ -1,0 +1,50 @@
+[
+  {
+    "question": "What is ESRS S1 about?",
+    "ground_truth": "ESRS S1 covers disclosures related to the own workforce, including employees and non-employee workers."
+  },
+  {
+    "question": "What is the purpose of Appendix A in ESRS S1?",
+    "ground_truth": "Appendix A provides application requirements that support the implementation of ESRS S1 disclosure requirements and has the same authority as the standard itself."
+  },
+  {
+    "question": "What are the disclosure requirements related to ESRS 2 SBM-3?",
+    "ground_truth": "ESRS S1 requires disclosure of material impacts, risks, and opportunities related to own workforce and their interaction with strategy and business model."
+  },
+  {
+    "question": "What does Disclosure Requirement S1-14 cover?",
+    "ground_truth": "S1-14 covers health and safety metrics, including the percentage of workforce covered by health and safety management systems and the number of incidents."
+  },
+  {
+    "question": "How should health and safety coverage be reported under ESRS S1?",
+    "ground_truth": "Health and safety coverage must be reported on a headcount basis rather than full-time equivalent."
+  },
+  {
+    "question": "What is the scope of ESRS S1 regarding non-employees?",
+    "ground_truth": "ESRS S1 may also require disclosure of similar information for non-employees in the undertaking's workforce."
+  },
+  {
+    "question": "What are the requirements for data estimation under ESRS S1?",
+    "ground_truth": "If detailed data is unavailable, the undertaking must use an estimation of employee numbers or ratios, clearly identifying where estimates have been applied."
+  },
+  {
+    "question": "What is ESRS 2 SBM-2 about in the context of ESRS S1?",
+    "ground_truth": "ESRS 2 SBM-2 relates to the interests and views of stakeholders, which must be considered in the context of own workforce disclosures under ESRS S1."
+  },
+  {
+    "question": "What policies must be disclosed under ESRS S1-1?",
+    "ground_truth": "ESRS S1-1 requires disclosure of policies related to own workforce, including those addressing material impacts and risks identified in the materiality assessment."
+  },
+  {
+    "question": "What actions and targets are required under ESRS S1-4 and S1-5?",
+    "ground_truth": "ESRS S1-4 requires disclosure of actions taken to address material impacts on own workforce. S1-5 requires disclosure of targets set in relation to these impacts."
+  },
+  {
+    "question": "What is the relationship between ESRS S1 and ESRS 2?",
+    "ground_truth": "ESRS S1 must be read in conjunction with ESRS 2, which provides general disclosures on strategy, governance and materiality that apply across all topical standards including S1."
+  },
+  {
+    "question": "What does the term own workforce mean in ESRS S1?",
+    "ground_truth": "Own workforce in ESRS S1 refers to employees and non-employee workers who are directly contracted by the undertaking, including both permanent and temporary workers."
+  }
+]
