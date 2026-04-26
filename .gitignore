@@ -1,6 +1,22 @@
+# Virtual environments
+.venv/
+.venv_new/
+.venv_eval/
+venv/
+env/
+
+# Secrets
+.env
+
+# Data
 data/raw/
 data/chroma/
-.venv/
-.venv/
-.env
-.venv_new/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# OS
+.DS_Store
