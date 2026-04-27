@@ -261,3 +261,33 @@ gcloud run deploy esg-rag-chatbot \
 ## 📄 License
 
 MIT License — see [LICENSE](LICENSE) for details.
+
+## Project Presentation
+
+<table>
+  <tr>
+    <td><img src="presentation/slides/slide_1.png" width="100%"/></td>
+    <td><img src="presentation/slides/slide_2.png" width="100%"/></td>
+    <td><img src="presentation/slides/slide_3.png" width="100%"/></td>
+  </tr>
+  <tr>
+    <td><img src="presentation/slides/slide_4.png" width="100%"/></td>
+    <td><img src="presentation/slides/slide_5.png" width="100%"/></td>
+    <td><img src="presentation/slides/slide_6.png" width="100%"/></td>
+  </tr>
+  <tr>
+    <td><img src="presentation/slides/slide_7.png" width="100%"/></td>
+    <td><img src="presentation/slides/slide_8.png" width="100%"/></td>
+    <td><img src="presentation/slides/slide_9.png" width="100%"/></td>
+  </tr>
+  <tr>
+    <td><img src="presentation/slides/slide_10.png" width="100%"/></td>
+    <td><img src="presentation/slides/slide_11.png" width="100%"/></td>
+    <td><img src="presentation/slides/slide_12.png" width="100%"/></td>
+  </tr>
+  <tr>
+    <td><img src="presentation/slides/slide_13.png" width="100%"/></td>
+    <td><img src="presentation/slides/slide_14.png" width="100%"/></td>
+    <td><img src="presentation/slides/slide_15.png" width="100%"/></td>
+  </tr>
+</table>
