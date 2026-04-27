@@ -1,10 +1,10 @@
 """
 Core RAG pipeline — ESG chatbot
-Hybrid retrieval (BM25 + Semantic) → CrossEncoder Reranking → Mistral generation
+Hybrid retrieval (BM25 + Qdrant) → CrossEncoder Reranking → Mistral generation
 """
 
 from langchain_mistralai import ChatMistralAI, MistralAIEmbeddings
-from langchain_chroma import Chroma
+from langchain_qdrant import QdrantVectorStore
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.prompts import PromptTemplate
@@ -26,10 +26,11 @@ class ESGRAGPipeline:
             model="mistral-embed",
             mistral_api_key=os.getenv("MISTRAL_API_KEY")
         )
-        self.vectorstore = Chroma(
-            persist_directory=os.getenv("CHROMA_PERSIST_DIR", "./data/chroma"),
-            embedding_function=self.embeddings,
-            collection_name=os.getenv("COLLECTION_NAME", "esg_documents"),
+        self.vectorstore = QdrantVectorStore.from_existing_collection(
+            embedding=self.embeddings,
+            url=os.getenv("QDRANT_URL"),
+            api_key=os.getenv("QDRANT_API_KEY"),
+            collection_name="esg_documents_qdrant",
         )
         self.llm = ChatMistralAI(
             model="mistral-small-latest",
@@ -47,10 +48,10 @@ class ESGRAGPipeline:
         if self.documents:
             tokenized = [doc.page_content.lower().split() for doc in self.documents]
             self.bm25 = BM25Okapi(tokenized)
-            print(f"✅ Hybrid RAG Pipeline initialized — {len(self.documents)} chunks")
+            print(f"✅ Hybrid RAG Pipeline (Qdrant) — {len(self.documents)} chunks")
         else:
             self.bm25 = None
-            print("✅ Semantic-only RAG Pipeline initialized")
+            print("✅ Semantic-only RAG Pipeline (Qdrant)")
 
     def _load_documents(self):
         docs = []
@@ -60,8 +61,7 @@ class ESGRAGPipeline:
             docs.extend(splitter.split_documents(pages))
         return docs
 
-    def _hybrid_retrieve(self, question: str, k: int = 10):
-        """Retrieval large (k=10) avant reranking"""
+    def _hybrid_retrieve(self, question: str, k: int = 8):
         semantic_docs = self.vectorstore.similarity_search(question, k=k)
         semantic_ids = {doc.page_content for doc in semantic_docs}
 
@@ -77,17 +77,12 @@ class ESGRAGPipeline:
         for doc in bm25_docs:
             if doc.page_content not in semantic_ids:
                 merged.append(doc)
-
         return merged
 
     def query(self, question: str) -> dict:
-        # 1. Hybrid retrieval large (k=10)
         candidates = self._hybrid_retrieve(question, k=8)
-
-        # 2. CrossEncoder reranking → top 4
         reranked = self.reranker.rerank(question, candidates)
 
-        # 3. Build context
         context_parts = []
         sources = []
         for i, doc in enumerate(reranked):
