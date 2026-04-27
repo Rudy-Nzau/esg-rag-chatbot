@@ -247,7 +247,6 @@ gcloud run deploy esg-rag-chatbot \
 - [x] Qdrant migration for production
 
 ---
-cat >> ~/esg-rag-chatbot/README.md << 'EOF'
 
 ## Project Presentation
 
@@ -278,7 +277,6 @@ cat >> ~/esg-rag-chatbot/README.md << 'EOF'
     <td><img src="presentation/slides/slide_15.png" width="100%"/></td>
   </tr>
 </table>
-EOF
 ---
 
 ##  Author
