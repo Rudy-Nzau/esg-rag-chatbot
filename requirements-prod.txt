@@ -3,11 +3,13 @@ uvicorn[standard]
 pydantic
 python-multipart
 langchain-mistralai
-langchain-chroma
+langchain-qdrant
 langchain-community
 langchain-text-splitters
-chromadb
+qdrant-client
 pypdf
 python-dotenv
 rank-bm25
 sentence-transformers
+langgraph
+langgraph-prebuilt
