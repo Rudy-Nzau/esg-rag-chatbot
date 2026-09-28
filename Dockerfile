@@ -10,7 +10,6 @@ RUN pip install --no-cache-dir -r requirements-prod.txt
 COPY api/ ./api/
 COPY rag/ ./rag/
 COPY ingestion/ ./ingestion/
-COPY data/chroma/ ./data/chroma/
 
 ENV PYTHONPATH=/app
 

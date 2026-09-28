@@ -3,15 +3,16 @@ Migration ChromaDB → Qdrant
 Réingère tous les documents dans Qdrant
 """
 
-from langchain_qdrant import QdrantVectorStore
-from langchain_mistralai import MistralAIEmbeddings
+import glob
+import os
+
+from dotenv import load_dotenv
 from langchain_community.document_loaders import PyPDFLoader
+from langchain_mistralai import MistralAIEmbeddings
+from langchain_qdrant import QdrantVectorStore
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams
-from dotenv import load_dotenv
-import os
-import glob
 
 load_dotenv()
 

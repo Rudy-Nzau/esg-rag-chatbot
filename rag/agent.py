@@ -2,16 +2,17 @@
 ESG RAG Agent — LangGraph ReAct Agent
 """
 
-from langgraph.prebuilt import create_react_agent
+import glob
+import os
+
+from dotenv import load_dotenv
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_core.tools import tool
 from langchain_mistralai import ChatMistralAI, MistralAIEmbeddings
 from langchain_qdrant import QdrantVectorStore
-from langchain_core.tools import tool
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.document_loaders import PyPDFLoader
+from langgraph.prebuilt import create_react_agent
 from rank_bm25 import BM25Okapi
-from dotenv import load_dotenv
-import os
-import glob
 
 load_dotenv()
 

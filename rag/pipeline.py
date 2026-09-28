@@ -3,18 +3,20 @@ Core RAG pipeline — ESG chatbot
 Hybrid retrieval (BM25 + Qdrant) → CrossEncoder Reranking → Mistral generation
 """
 
-from langchain_mistralai import ChatMistralAI, MistralAIEmbeddings
-from langchain_qdrant import QdrantVectorStore
-from langchain_community.document_loaders import PyPDFLoader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_core.prompts import PromptTemplate
-from rag.prompts import ESG_RAG_PROMPT
-from rag.reranker import CrossEncoderReranker
-from rank_bm25 import BM25Okapi
-from dotenv import load_dotenv
-import os
 import glob
 import logging
+import os
+
+from dotenv import load_dotenv
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_core.prompts import PromptTemplate
+from langchain_mistralai import ChatMistralAI, MistralAIEmbeddings
+from langchain_qdrant import QdrantVectorStore
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from rank_bm25 import BM25Okapi
+
+from rag.prompts import ESG_RAG_PROMPT
+from rag.reranker import CrossEncoderReranker
 
 load_dotenv()
 logger = logging.getLogger(__name__)

@@ -3,13 +3,14 @@ Pipeline d'ingestion de documents ESG
 PDF → chunks → embeddings Mistral → ChromaDB
 """
 
-from langchain_community.document_loaders import PyPDFLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_mistralai import MistralAIEmbeddings
-from langchain_community.vectorstores import Chroma
-from dotenv import load_dotenv
-import os
 import logging
+import os
+
+from dotenv import load_dotenv
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_community.vectorstores import Chroma
+from langchain_mistralai import MistralAIEmbeddings
 
 load_dotenv()
 logger = logging.getLogger(__name__)

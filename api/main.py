@@ -1,7 +1,8 @@
+import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from api.routers import chat, ingest, agent
-import uvicorn
+
+from api.routers import agent, chat
 
 app = FastAPI(
     title="ESG RAG Chatbot API",
@@ -18,7 +19,6 @@ app.add_middleware(
 
 app.include_router(chat.router, prefix="/chat", tags=["rag"])
 app.include_router(agent.router, prefix="/agent", tags=["agent"])
-app.include_router(ingest.router, prefix="/ingest", tags=["ingestion"])
 
 @app.get("/health")
 def health_check():

@@ -1,9 +1,10 @@
+
 from pydantic import BaseModel
-from typing import Optional
+
 
 class ChatRequest(BaseModel):
     query: str
-    collection_name: Optional[str] = "esg_documents"
+    collection_name: str | None = "esg_documents"
 
 class ChatResponse(BaseModel):
     answer: str

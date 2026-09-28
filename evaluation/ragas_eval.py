@@ -1,11 +1,12 @@
-from ragas import evaluate
-from ragas.metrics import faithfulness, answer_relevancy, context_precision
-from datasets import Dataset
-from langchain_mistralai import ChatMistralAI, MistralAIEmbeddings
-from langchain_community.vectorstores import Chroma
-from dotenv import load_dotenv
-import os
 import json
+import os
+
+from datasets import Dataset
+from dotenv import load_dotenv
+from langchain_community.vectorstores import Chroma
+from langchain_mistralai import ChatMistralAI, MistralAIEmbeddings
+from ragas import evaluate
+from ragas.metrics import answer_relevancy, context_precision, faithfulness
 
 load_dotenv()
 
